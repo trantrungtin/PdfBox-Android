@@ -114,7 +114,7 @@ public final class SecurityHandlerFactory
         Class<? extends SecurityHandler> handlerClass = nameToHandler.get(name);
         if (handlerClass == null)
         {
-        	return null;
+            return null;
         }
 
         Class<?>[] argsClasses = { };
@@ -128,14 +128,13 @@ public final class SecurityHandlerFactory
      * @param argsClasses the parameter array.
      * @param args array of objects to be passed as arguments to the constructor call.
      * @return a new SecurityHandler instance, or null if none is available.
-     * @throws RuntimeException
      */
     private SecurityHandler newSecurityHandler(Class<? extends SecurityHandler> handlerClass,
-    		Class<?>[] argsClasses, Object[] args)
+        Class<?>[] argsClasses, Object[] args)
     {
-    	try
-    	{
-    		Constructor<? extends SecurityHandler> ctor =
+        try
+        {
+            Constructor<? extends SecurityHandler> ctor =
                     handlerClass.getDeclaredConstructor(argsClasses);
             return ctor.newInstance(args);
         }

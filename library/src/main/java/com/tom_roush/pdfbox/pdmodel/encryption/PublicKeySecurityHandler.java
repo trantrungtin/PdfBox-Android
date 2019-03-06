@@ -28,7 +28,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
-import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
@@ -68,7 +67,6 @@ import org.spongycastle.cms.KeyTransRecipientId;
 import org.spongycastle.cms.RecipientId;
 import org.spongycastle.cms.RecipientInformation;
 import org.spongycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
-import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * This class implements the public key security handler described in the PDF specification.
@@ -287,8 +285,6 @@ public final class PublicKeySecurityHandler extends SecurityHandler
         }
         try
         {
-            Security.addProvider(new BouncyCastleProvider());
-
             PDEncryption dictionary = doc.getEncryption();
             if (dictionary == null)
             {
@@ -323,9 +319,7 @@ public final class PublicKeySecurityHandler extends SecurityHandler
             SecretKey sk = key.generateKey();
             System.arraycopy(sk.getEncoded(), 0, seed, 0, 20); // create the 20 bytes seed
 
-
             byte[][] recipientsField = computeRecipientsField(seed);
-
             dictionary.setRecipients(recipientsField);
 
             int sha1InputLength = seed.length;
