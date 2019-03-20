@@ -17,78 +17,76 @@
 package com.tom_roush.pdfbox.pdmodel.interactive.action;
 
 import com.tom_roush.pdfbox.cos.COSBase;
+import com.tom_roush.pdfbox.cos.COSBoolean;
 import com.tom_roush.pdfbox.cos.COSDictionary;
 import com.tom_roush.pdfbox.cos.COSName;
-import com.tom_roush.pdfbox.cos.COSStream;
-import com.tom_roush.pdfbox.cos.COSString;
 
 /**
- * This represents a JavaScript action.
+ * This represents a thread action that can be executed in a PDF document.
  *
- * @author Michael Schwarzenberger
+ * @author Evgeniy Muravitskiy
  */
-public class PDActionJavaScript extends PDAction
+public class PDActionHide extends PDAction
 {
+
     /**
      * This type of action this object represents.
      */
-    public static final String SUB_TYPE = "JavaScript";
+    public static final String SUB_TYPE = "Hide";
 
     /**
-     * Constructor #1.
+     * Default Constructor
      */
-    public PDActionJavaScript()
+    public PDActionHide()
     {
-        super();
-        setSubType( SUB_TYPE );
+        setSubType(SUB_TYPE);
     }
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param js Some javascript code.
+     * @param a the action dictionary
      */
-    public PDActionJavaScript( String js )
-    {
-        this();
-        setAction( js );
-    }
-
-    /**
-     * Constructor #2.
-     *
-     *  @param a The action dictionary.
-     */
-    public PDActionJavaScript(COSDictionary a)
+    public PDActionHide(COSDictionary a)
     {
         super(a);
     }
 
     /**
-     * @param sAction The JavaScript.
+     * The annotation or annotations to be hidden or shown
+     *
+     * @return The T entry of the specific thread action dictionary.
      */
-    public final void setAction(String sAction)
+    public COSBase getT()
     {
-        action.setString(COSName.JS, sAction);
+        // Dictionary, String or Array
+        return this.action.getDictionaryObject(COSName.T);
     }
 
     /**
-     * @return The Javascript Code.
+     * @param t annotation or annotations
      */
-    public String getAction()
+    public void setT(COSBase t)
     {
-        COSBase base = action.getDictionaryObject( COSName.JS );
-        if (base instanceof COSString)
-        {
-            return ((COSString)base).getString();
-        }
-        else if (base instanceof COSStream)
-        {
-            return ((COSStream)base).toTextString();
-        }
-        else
-        {
-            return null;
-        }
+        this.action.setItem(COSName.T, t);
     }
+
+    /**
+     * A flag indicating whether to hide the annotation or show it
+     *
+     * @return true if annotation is hidden
+     */
+    public boolean getH()
+    {
+        return this.action.getBoolean(COSName.H, true);
+    }
+
+    /**
+     * @param h hide flag
+     */
+    public void setH(boolean h)
+    {
+        this.action.setItem(COSName.H, COSBoolean.getBoolean(h));
+    }
+
 }

@@ -14,81 +14,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.tom_roush.pdfbox.pdmodel.interactive.action;
 
+import com.tom_roush.pdfbox.cos.COSArray;
 import com.tom_roush.pdfbox.cos.COSBase;
 import com.tom_roush.pdfbox.cos.COSDictionary;
 import com.tom_roush.pdfbox.cos.COSName;
-import com.tom_roush.pdfbox.cos.COSStream;
-import com.tom_roush.pdfbox.cos.COSString;
 
 /**
- * This represents a JavaScript action.
- *
- * @author Michael Schwarzenberger
+ * @author Timur Kamalov
  */
-public class PDActionJavaScript extends PDAction
+public class PDActionResetForm extends PDAction
 {
+
     /**
      * This type of action this object represents.
      */
-    public static final String SUB_TYPE = "JavaScript";
+    public static final String SUB_TYPE = "ResetForm";
 
     /**
-     * Constructor #1.
+     * Default constructor.
      */
-    public PDActionJavaScript()
+    public PDActionResetForm()
     {
-        super();
-        setSubType( SUB_TYPE );
+        action = new COSDictionary();
+        setSubType(SUB_TYPE);
     }
 
     /**
      * Constructor.
      *
-     * @param js Some javascript code.
+     * @param a The action dictionary.
      */
-    public PDActionJavaScript( String js )
-    {
-        this();
-        setAction( js );
-    }
-
-    /**
-     * Constructor #2.
-     *
-     *  @param a The action dictionary.
-     */
-    public PDActionJavaScript(COSDictionary a)
+    public PDActionResetForm(COSDictionary a)
     {
         super(a);
     }
 
     /**
-     * @param sAction The JavaScript.
+     * An array identifying which fields to include in the submission or which to exclude, depending
+     * on the setting of the Include/Exclude flag in the Flags entry
+     *
+     * @return the array of fields
      */
-    public final void setAction(String sAction)
+    public COSArray getFields()
     {
-        action.setString(COSName.JS, sAction);
+        COSBase retval = this.action.getDictionaryObject(COSName.FIELDS);
+        return retval instanceof COSArray ? (COSArray)retval : null;
     }
 
     /**
-     * @return The Javascript Code.
+     * @param array the array of fields
      */
-    public String getAction()
+    public void setFields(COSArray array)
     {
-        COSBase base = action.getDictionaryObject( COSName.JS );
-        if (base instanceof COSString)
-        {
-            return ((COSString)base).getString();
-        }
-        else if (base instanceof COSStream)
-        {
-            return ((COSStream)base).toTextString();
-        }
-        else
-        {
-            return null;
-        }
+        this.action.setItem(COSName.FIELDS, array);
     }
+
+    /**
+     * A set of flags specifying various characteristics of the action
+     *
+     * @return the flags
+     */
+    public int getFlags()
+    {
+        return this.action.getInt(COSName.FLAGS, 0);
+    }
+
+    /**
+     * @param flags the flags
+     */
+    public void setFlags(int flags)
+    {
+        this.action.setInt(COSName.FLAGS, flags);
+    }
+
 }
